@@ -101,3 +101,83 @@
 		    "presets": ["env","stage-0","react"],
 		    "plugins": ["transform-runtime"],
 		}
+
+3.在JSX语法中需要用JS的地方就需要用{},在JXS中类名需要用className 不能用class   label中的for要用htmlFor
+
+		let a = 10 
+		
+		// 在JSX语法中 html标签可以看成是一个对象
+		let arr = [
+		    <h1>之类的开发商</h1>,
+		    <h3>阿萨德发的</h3>
+		]
+		let arrStr = ['sdfsd','sdfsadf','sadfasdf','asdfasdfs']
+		// let strArr = []
+		// arrStr.forEach(item=>{
+		//     strArr.push(<h5>{item}</h5>)
+		// })
+		
+		// 在JSX中需要用JS的地方就需要用{}
+		ReactDOM.render(<div>
+		    <p className="myP">这是一个数字：{a}</p>
+		    {arr}
+		    {arrStr.map(item=><h5>{item}</h5>)}
+ 			<label htmlFor="dlskfk">111</label>
+		</div>,document.getElementById('app'))
+
+## 使用组件
+1.使用构造函数创建组件  
+
+	import React from 'react'
+	import ReactDOM from 'react-dom'
+	
+	// 用构造函数创建组件  必须要return 负责报错 return null 则渲染未空白
+	// props来传递参数
+	function Holle(props){
+	    return <div>这是HOLLE组件--{props.name}--{props.age}--{props.gender}</div>
+	}
+	let dog = {
+	    name:'大黄',
+	    gender:'母的',
+	    age:18
+	}
+	const mydiv = <div>
+	    {/* <Holle name={dog.name} age={dog.age}></Holle> */}
+		{/* {es6语法} */}
+	    <Holle {...dog}></Holle>
+	</div>
+	ReactDOM.render(mydiv,document.getElementById('app'))
+
+2.使用jsx文件创建组件  
+  
+ - 新建`Holle.jsx`文件  
+ 
+		// 这里用到了JXS，要导入React
+		import React from 'react'
+		
+		export default function Holle(props){
+		return <div>这是HOLLE组件--{props.name}--{props.age}--{props.gender}</div>
+		}
+		
+		//export default Holle
+
+ - 把jsx文件导入`index.js`中  
+
+		import React from 'react'
+		import ReactDOM from 'react-dom'
+
+		// 导入jsx组件
+		import Holle from './components/Holle.jsx'
+
+		let dog = {
+		    name:'大黄',
+		    gender:'母的',
+		    age:18
+		}
+		const mydiv = <div>
+		    {/* <Holle name={dog.name} age={dog.age}></Holle> */}
+			{/* {es6语法} */}
+		    <Holle {...dog}></Holle>
+		</div>
+		ReactDOM.render(mydiv,document.getElementById('app'))
+		 
