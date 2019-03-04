@@ -47,13 +47,13 @@
 
  - react:专门用于创建组件和虚拟DOM的，同时组件的生命周期都在这个包中
  - react-dom：渲染页面，专门用于进行DOM操作的，主要应用场景是`ReactDOM.render()`  
- 
+
 2.在index.js中导入`react react-dom`包
- 
+
 		// 导入react react-dom包时 名称必须这样 不可变
 		import React from 'react'
 		import ReactDOM from 'react-dom'
-		
+
 3.创建虚拟DOM  
 
 		//参数1：创建元素的类型，字符串，表示元素的名称
@@ -65,7 +65,7 @@
 
 4.使用ReactDOM把虚拟DOM渲染到页面上  
 
-		
+
 		//参数1：要渲染的虚拟DOM名
 		//参数2：指定页面上的容器 不可用选择器 需要是DOM元素
 		ReactDOM.render(myh1,document.getElementById('app'))
@@ -75,7 +75,7 @@
 
  - `npm i babel-core babel-loader babel-plugin-transform-runtime babel-preset-env babel-preset-stage-0 -D`  
  - `npm i babel-preset-react -D`  
- 
+
 
 2.添加`.babelrc`配置文件   
 
@@ -149,9 +149,9 @@
 	ReactDOM.render(mydiv,document.getElementById('app'))
 
 2.使用jsx文件创建组件  
-  
+
  - 新建`Holle.jsx`文件  
- 
+
 		// 这里用到了JXS，要导入React
 		import React from 'react'
 		
@@ -168,7 +168,7 @@
 
 		// 导入jsx组件
 		import Holle from './components/Holle.jsx'
-
+	
 		let dog = {
 		    name:'大黄',
 		    gender:'母的',
@@ -180,11 +180,11 @@
 		    <Holle {...dog}></Holle>
 		</div>
 		ReactDOM.render(mydiv,document.getElementById('app'))
-		 
+	
 3.使用`class`类创建组件  
 
  - 先了解class使用方式
- 
+
 		// 以前
 		function Person(name,age){
 		    this.name = name
@@ -290,3 +290,129 @@
 		    <Moven></Moven>
 		</div>
 		ReactDOM.render(mydiv,document.getElementById('app'))
+## class组件相关操作
+
+- props组件传参（此参数是只读的）
+
+```
+// 用class来创建组件 
+class Moven extends React.Component {  
+    //接受组件参数直接this.props.name的方式
+    render(){
+        return <div>
+            这是class创建的组件--{this.props.name}
+            </div>
+    }
+}
+let user={
+    name:'zs',
+    age:18
+}
+const mydiv = <div>
+    123
+    <Moven {...user}></Moven>
+</div>
+ReactDOM.render(mydiv,document.getElementById('app'))
+```
+
+- class创建组件和function创建函数的对比
+
+  ```
+  1.function构造函数创建组件是无状态的，叫做无状态组件
+  2.通过class创建组件是有状态的，叫做有状态组件
+  2.本质上的区别就是有没有state属性和生命周期函数
+  ```
+
+- class中的state属性
+
+  ```
+  // 用class来创建组件 
+  class Moven extends React.Component { 
+      constructor(){
+          //因为moven组件继承了react.component 所以构造器中必须调用super
+          super()
+          //只有调用了super才能调用this
+          this.state = { //这个this.state相当于vue中的data(){return{}}
+              msg:'这是this.state中的消息'
+          }
+      }
+      render(){
+          return <div>
+              这是class创建的组件--{this.props.name}
+              <h4>{this.state.msg}</h4>
+              </div>
+      }
+  }
+  let user={
+      name:'zs',
+      age:18
+  }
+  const mydiv = <div>
+      	<Moven {...user}></Moven>
+  	</div>
+  ReactDOM.render(mydiv,document.getElementById('app'))
+  ```
+
+  
+
+## 评论列表案例
+
+列表组件
+
+```
+import React from 'react'
+// 导入 评论项 组件
+import CmtItem from '@/components/CmtItem'
+export default class CmtList extends React.Component {
+  constructor() {
+    super()
+    this.state = {
+      CommentList: [ // 评论列表数据
+        { id: 1, user: '张三', content: '哈哈，沙发' },
+        { id: 2, user: '李四', content: '哈哈，板凳' },
+        { id: 3, user: '王五', content: '哈哈，凉席' },
+        { id: 4, user: '赵六', content: '哈哈，砖头' },
+        { id: 5, user: '田七', content: '哈哈，楼下山炮' }
+      ]
+    }
+  }
+  render() {
+    return <div>
+      {/* 注意：在 JSX 中，如果想写 行内样式了，不能 为 style 设置 字符串的值 */}
+      {/* 而是应该 这么写：    style={ { color: 'red' } } */}
+      {/* <h1 style="color:red;">这是评论列表组件</h1>   这是错误的 */}
+      {/* 在 行内样式中，如果 是 数值类型的样式，则可以不用引号包裹，如果是 字符串类型的 样式值，必须使用 引号包裹 */}
+      <h1 style={{ color: 'red', fontSize: '35px', zIndex: 3, fontWeight: 200, textAlign: 'center' }}>这是评论列表组件</h1>
+      {this.state.CommentList.map(item => <CmtItem {...item} key={item.id}></CmtItem>)}
+    </div>
+  }
+}
+```
+
+评论组件
+
+```
+import React from 'react'
+class ComItem extends React.Component {
+    render(){
+        return <div className='comBox'>
+            <h3>评论人：{this.props.user}</h3>
+            <p>评论内容：{this.props.content}</p>
+        </div>
+    }
+}
+export default ComItem
+```
+
+index.js
+
+```
+import React from 'react'
+import ReactDOM from 'react-dom'
+import ComList from './components/列表子组件'
+const mydiv = <div>
+    <ComList></ComList>
+</div>
+ReactDOM.render(mydiv,document.getElementById('app'))
+```
+

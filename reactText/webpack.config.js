@@ -18,7 +18,7 @@ const htmlPlugin = new HtmlWebPackPlugin({
 // }
 //因为export default是es6语法 webpack并不支持 
 module.exports = {
-    mode:'production', //development 或者  production
+    mode:'development', //development 或者  production
     //在webpack4中 约定大于配置  默认会去src下面找到index.js作为入口打包文件 所以不必设置entry入口
     plugins:[//所有的插件
         htmlPlugin
@@ -26,6 +26,7 @@ module.exports = {
     module:{ //所有的第三发模块配置规则
         rules:[
             {test:/\.js|jsx$/,use:'babel-loader',exclude:/node_modules/}, //exclude为排除项  不能忘记加
+            {test:/\.css$/,use:['style-loader','css-loader'],exclude:/node_modules/},          
         ]
 
     }

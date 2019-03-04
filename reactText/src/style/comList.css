@@ -1,0 +1,17 @@
+.title {
+    font-weight: 200;
+    color: red;
+    text-align: center;
+}
+.comBox {
+    border: 1px dashed #ccc;
+    box-shadow: 0 0 10px #ccc;
+    margin: 10px;
+    padding: 10PX;
+}
+h3 {
+    font-size: 16px;
+}
+p {
+    font-size: 14px;
+}
