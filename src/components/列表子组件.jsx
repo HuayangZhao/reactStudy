@@ -1,7 +1,8 @@
 import React from 'react'
 import ComItem from './评论组件'
-import ComStyle from '../style/comList.css'
-console.log(ComStyle)
+import ComStyle from '../style/comList.less'
+import 'bootstrap/dist/css/bootstrap.css'
+// console.log(ComStyle)
 class ComList extends React.Component {
     constructor(){
         super() 
@@ -18,7 +19,8 @@ class ComList extends React.Component {
     render(){
         return <div>
             {/* <h1 className='title' style={{color:'red'}}>这是评论列表</h1> */}
-            <h1 className={ComStyle.title} >这是评论列表</h1>
+            {/* <h1 className={ComStyle.title} >这是评论列表</h1> */}
+            <button className="btn btn-primary">按钮啊</button>
             {this.state.CommentList.map(item=><ComItem {...item} key={item.id}></ComItem>)}
         </div>
     }

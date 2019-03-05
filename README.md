@@ -122,8 +122,9 @@
 		    <p className="myP">这是一个数字：{a}</p>
 		    {arr}
 		    {arrStr.map(item=><h5>{item}</h5>)}
- 			<label htmlFor="dlskfk">111</label>
+		    <label htmlFor="dlskfk">111</label>
 		</div>,document.getElementById('app'))
+
 
 ## 创建组件
 1.使用构造函数创建组件  
@@ -168,7 +169,7 @@
 
 		// 导入jsx组件
 		import Holle from './components/Holle.jsx'
-	
+		
 		let dog = {
 		    name:'大黄',
 		    gender:'母的',
@@ -357,7 +358,9 @@ ReactDOM.render(mydiv,document.getElementById('app'))
 
 ## 评论列表案例
 
-列表组件
+**1.拆分组件**
+
+- 列表组件
 
 ```
 import React from 'react'
@@ -378,18 +381,14 @@ export default class CmtList extends React.Component {
   }
   render() {
     return <div>
-      {/* 注意：在 JSX 中，如果想写 行内样式了，不能 为 style 设置 字符串的值 */}
-      {/* 而是应该 这么写：    style={ { color: 'red' } } */}
-      {/* <h1 style="color:red;">这是评论列表组件</h1>   这是错误的 */}
-      {/* 在 行内样式中，如果 是 数值类型的样式，则可以不用引号包裹，如果是 字符串类型的 样式值，必须使用 引号包裹 */}
-      <h1 style={{ color: 'red', fontSize: '35px', zIndex: 3, fontWeight: 200, textAlign: 'center' }}>这是评论列表组件</h1>
+      <h1>这是评论列表组件</h1>
       {this.state.CommentList.map(item => <CmtItem {...item} key={item.id}></CmtItem>)}
     </div>
   }
 }
 ```
 
-评论组件
+- 评论组件
 
 ```
 import React from 'react'
@@ -404,7 +403,7 @@ class ComItem extends React.Component {
 export default ComItem
 ```
 
-index.js
+- index.js
 
 ```
 import React from 'react'
@@ -414,5 +413,340 @@ const mydiv = <div>
     <ComList></ComList>
 </div>
 ReactDOM.render(mydiv,document.getElementById('app'))
+```
+
+**2.style样式的应用**
+
+- 行内样式
+
+  ```
+  import React from 'react'
+  // 导入 评论项 组件
+  import CmtItem from '@/components/CmtItem'
+  export default class CmtList extends React.Component {
+    constructor() {
+      super()
+      this.state = {
+        CommentList: [ // 评论列表数据
+          { id: 1, user: '张三', content: '哈哈，沙发' },
+          { id: 2, user: '李四', content: '哈哈，板凳' },
+          { id: 3, user: '王五', content: '哈哈，凉席' },
+          { id: 4, user: '赵六', content: '哈哈，砖头' },
+          { id: 5, user: '田七', content: '哈哈，楼下山炮' }
+        ]
+      }
+    }
+    render() {
+      return <div>
+        {/* 注意：在 JSX 中，如果想写 行内样式了，不能 为 style 设置 字符串的值，如<h1 style="color:red;"> */}
+        {/* 而是应该 这么写：    style={ { color: 'red' } } */}
+        {/* 在 行内样式中，如果 是 数值类型的样式，则可以不用引号包裹，如果是 字符串类型的 样式值，必须使用 引号包裹 */}
+        <h1 style={{ color: 'red', fontSize: '35px', zIndex: 3, fontWeight: 200, textAlign: 'center' }}>这是评论列表组件</h1>
+        {this.state.CommentList.map(item => <CmtItem {...item} key={item.id}></CmtItem>)}
+      </div>
+    }
+  }
+  ```
+
+  
+
+- 导入样式文件
+
+  ```
+  style样式文件comList.css
+  .title {
+      font-weight: 200;
+      color: red;
+      text-align: center;
+  }
+  .comBox {
+      border: 1px dashed #ccc;
+      box-shadow: 0 0 10px #ccc;
+      margin: 10px;
+      padding: 10PX;
+  }
+  h3 {
+      font-size: 16px;
+  }
+  p {
+      font-size: 14px;
+  }
+  
+  ===================================
+  
+  import React from 'react'
+  import ComItem from './评论组件'
+  import ComStyle from '../style/comList.css'
+  class ComList extends React.Component {
+      constructor(){
+          super() 
+          this.state = {
+              CommentList: [ // 评论列表数据
+                { id: 1, user: '张三', content: '哈哈，沙发' },
+                { id: 2, user: '李四', content: '哈哈，板凳' },
+                { id: 3, user: '王五', content: '哈哈，凉席' },
+                { id: 4, user: '赵六', content: '哈哈，砖头' },
+                { id: 5, user: '田七', content: '哈哈，楼下山炮' }
+              ]
+            }
+      }
+      render(){
+          return <div>
+              <h1 className='title' >这是评论列表</h1>
+              {this.state.CommentList.map(item=><ComItem {...item} key={item.id}></ComItem>)}
+          </div>
+      }
+  }
+  export default ComList
+  ```
+
+  **因为style样式没有作用域，直接导入 css 样式表，默认是在全局上，整个项目都生效的！Vue 组件中的样式表，也有冲突的问题；但是，可以使用 <style scoped></style>，但是React 中，没有类似于 scoped 这样的指令，React 中根本就没有指令的概念，在React 中想要为css设置模块化，我们需要配置webpack**
+
+  - webpack配置CSS模块化
+
+    ```
+     module:{ //所有的第三发模块配置规则
+            rules:[
+            	//exclude为排除项  不能忘记加
+                {test:/\.js|jsx$/,use:'babel-loader',exclude:/node_modules/}, 
+                { 
+                    test: /\.css$/, use: ['style-loader', 
+                    'css-loader?modules']
+                }  
+            ],
+     }
+    ```
+
+    **  css-loader后面加参数和URL携带参数格式类似，modules代表把样式模块化**
+
+    ```
+    style样式文件comList.css
+    .title {
+        font-weight: 200;
+        color: red;
+        text-align: center;
+    }
+    .comBox {
+        border: 1px dashed #ccc;
+        box-shadow: 0 0 10px #ccc;
+        margin: 10px;
+        padding: 10PX;
+    }
+    h3 {
+        font-size: 16px;
+    }
+    p {
+        font-size: 14px;
+    }
+    
+    ===================================
+    
+    import ComStyle from '../style/comList.css'
+    console.log(ComStyle)
+    //没有加模块化前 打印为空 样式全局生效
+    //加上模块化，打印为{title: "_10QwVNiVj0mzxXl5_vuLVT", comBox: "_3Ef1gVratXBW6Nz9oek627"}，样式当前文件生效
+    用法：<h1 className={ComStyle.title} >这是评论列表</h1>
+    ```
+
+    **注意：样式模块化只对类名选择器和ID选择器有用，对标签选择器无用**
+
+    - 配置类名
+
+      ```
+      module:{ //所有的第三发模块配置规则
+              rules:[
+              	//exclude为排除项  不能忘记加
+                  {test:/\.js|jsx$/,use:'babel-loader',exclude:/node_modules/}, 
+                  { 
+                      test: /\.css$/, use: ['style-loader', 
+                      'css-loader?modules&localIdentName=[path][name]-[local]-[hash:5]']
+                  }  
+              ],
+       }
+      ```
+
+      **localIdentName为自定义模块化类名**
+
+      1.path：代表当前样式文件所在文件夹的路径   {title: "src-style-", comBox: "src-style-"}；
+
+      2.name：代表样式文件名称  {title: "src-style-comList", comBox: "src-style-comList"}；
+
+      3.local：表示当前选择器名称  {title: "src-style-comList-title", comBox: "src-style-comList-comBox"}
+
+      4.hash:length：表示hash值，默认32位，length限定取前几位  {title: "src-style-comList-title-77fe7", comBox: "src-style-comList-comBox-87605"}
+
+- local和global设置选择器是否被模块化
+
+  ```
+  /* 注意： 被 :local() 包裹起来的类名，会被模块化； 默认情况下， 所有的类名和ID，都被 模块化了； */
+  .title{
+    color: red;
+    text-align: center;
+    font-weight: 200;
+  }
+  
+  /* css 模块化，只针对 类选择器 和 Id选择器生效 */
+  /* CSS 模块化 不会 将 标签选择器模块化 */
+  /* h1{
+    font-style: italic;
+  } */
+  
+  /* 注意：被 :global() 包裹起来的类名，不会被模块化，而是会全局生效； */ 
+  :global(.test){
+    font-style: italic;
+  }
+  ```
+
+
+**3.引用第三方UI**
+
+```
+import ComStyle from '../style/comList.less'
+//引入bootstrap样式
+import 'bootstrap/dist/css/bootstrap.css'
+class ComList extends React.Component {
+    constructor(){
+        super() 
+        this.state = {}
+    }
+    render(){
+        return <div>
+         	<h1 className={ComStyle.title} >这是评论列表</h1>
+            //  <button className="btn btn-primary">按钮啊</button>  发现这么引用是错误的
+            //原因是在webpack中配置了css样式模块化，bootstrap样式会被编译
+        </div>
+    }
+}
+```
+
+**为了能够方便的引用第三方UI，自己规定，自己书写的样式都用less或者scss，第三方UI用css，这样就能区别编译**
+
+- webpack 区别编译
+
+```
+ module:{ //所有的第三发模块配置规则
+        rules:[
+            {test:/\.js|jsx$/,use:'babel-loader',exclude:/node_modules/}, //exclude为排除项  不能忘记加
+            { test: /\.css$/, use: ['style-loader', 'css-loader']}, //第三方UI不适用模块化编译
+            { test: /\.less$/, use: ['style-loader', 'css-loader?modules&localIdentName=[path][name]-[local]-[hash:5]','less-loader']},
+            { test: /\.ttf|woff2|woff|eot|svg$/, use: ['url-loader']},   //配置字体图标  
+                             
+        ]
+    },
+```
+
+## 点击事件
+
+1.绑定点击事件
+
+```
+import React from 'react'
+export default class Click extends React.Component {
+    constructor(){
+        super()
+        this.state = {}
+    }
+    render(){
+        // 在react中绑定事件要用驼峰命名 事件绑定必须是函数 标准绑定使用剪头函数
+        return <div>
+            {/* <button onClick={()=>{this.show()}}>按钮点击事件</button> */}
+            <button onClick={() => this.show('方法被调用')}>按钮点击事件</button>            
+            </div>
+    }
+    show=(v)=>{
+        console.log(v)
+    }
+}
+
+```
+
+2.改变state的值，用setState
+
+- 不建议使用下面方法
+
+```
+import React from 'react'
+export default class Click extends React.Component {
+    constructor(){
+        super()
+        this.state = {
+            msg:'我是一只小小小小鸟'
+        }
+    }
+    render(){
+        // 在react中绑定事件要用驼峰命名 事件绑定必须是函数 标准绑定使用剪头函数
+        return <div>
+            {/* <button onClick={()=>{this.show()}}>按钮点击事件</button> */}
+            <button onClick={() => this.show('方法被调用')}>按钮点击事件--{this.state.msg}</button>            	{/*点击按钮后  按钮中的this.state.msg 依旧是'我是一只小小小小鸟'*/}
+            </div>
+    }
+    show=(v)=>{
+        console.log(v)
+        this.state.msg = '我被改变了' //这样可以更改，但是只是页面上的数据不会更新
+        console.log(this.state.msg) // 打印'我被改变了'
+    }
+}
+```
+
+- 建议使用此方法
+
+```
+import React from 'react'
+export default class Click extends React.Component {
+    constructor(){
+        super()
+        this.state = {
+            msg:'我是一只小小小小鸟',
+            age:28
+        }
+    }
+    render(){
+        // 在react中绑定事件要用驼峰命名 事件绑定必须是函数 标准绑定使用剪头函数
+        return <div>
+            {/* <button onClick={()=>{this.show()}}>按钮点击事件</button> */}
+            <button onClick={() => this.show('方法被调用')}>按钮点击事件--{this.state.msg}</button>            
+            </div>
+    }
+    show=(v)=>{
+        console.log(v)
+        this.setState({ msg: '123' }) //这样设置点击按钮后按钮中的msg也会更改
+        this.setState({ msg: '123' },function(){console.log(this.state.msg)})//这里打印的就是更新后的值
+        console.log(this.state.msg) //这里依旧会打印'我是一只小小小小鸟' 因为this.setState是异步方法
+    }
+    //在 setState ，只会把 对应的 state 状态更新，而不会 覆盖其它的 state 状态,更改后state中的age依旧存在
+    //如果在调用完 this.setState 之后，又想立即拿到 最新的 state 值，需要使用 this.setState({}, callback)
+}
+
+```
+
+2.实现输入框双向绑定
+
+```
+import React from 'react'
+export default class Click extends React.Component {
+    constructor(){
+        super()
+        this.state = {
+            msg:'我是一只小小小小鸟',
+            text:'输入框的值'
+        }
+    }
+    render(){
+        return <div>
+            {/* 当 为 文本框绑定 value 值以后，要么同时提供一个 readOnly， 要么，提供一个 onChange 处理函数 */}
+            {/* 如果 我们只是把 文本框的 value 属性，绑定到了 state 状态，但是，如果不提供 onChagne 处理函数的话，得到的文本框，将会是一个只读的文本框 */}
+            <input value={this.state.text} onChange={(e)=>this.change(e)}></input>            
+            </div>
+    }
+    change=(e)=>{
+    // 接收事件源参数获取value值设置给state state值再同步到页面上实现双向绑定
+   const newVal = e.target.value
+    this.setState({
+        text: newVal
+    })
+    }
+}
+
+
 ```
 
