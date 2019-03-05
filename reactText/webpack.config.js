@@ -26,8 +26,7 @@ module.exports = {
     module:{ //所有的第三发模块配置规则
         rules:[
             {test:/\.js|jsx$/,use:'babel-loader',exclude:/node_modules/}, //exclude为排除项  不能忘记加
-            {test:/\.css$/,use:['style-loader','css-loader'],exclude:/node_modules/},          
+            { test: /\.css$/, use: ['style-loader', 'css-loader?modules&localIdentName=[path][name]-[local]-[hash:5]']}  
         ]
-
     }
 }
