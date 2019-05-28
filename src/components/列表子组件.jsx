@@ -2,10 +2,9 @@ import React from 'react'
 import ComItem from './评论组件'
 import ComStyle from '../style/comList.less'
 import 'bootstrap/dist/css/bootstrap.css'
-// console.log(ComStyle)
 class ComList extends React.Component {
     constructor(){
-        super() 
+        super()
         this.state = {
             CommentList: [ // 评论列表数据
               { id: 1, user: '张三', content: '哈哈，沙发' },

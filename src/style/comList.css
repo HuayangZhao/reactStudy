@@ -1,0 +1,19 @@
+.title {
+  font-weight: 200;
+  color: red;
+  text-align: center;
+}
+/* 被global包裹起来的不会被模块化，而是全局生效 */
+:global(.comBox) {
+  border: 1px dashed #ccc;
+  box-shadow: 0 0 10px #ccc;
+  margin: 10px;
+  padding: 10PX;
+}
+h3 {
+  font-size: 18px;
+}
+p {
+  font-size: 16px;
+}
+/*# sourceMappingURL=comList.css.map */

@@ -1,5 +1,8 @@
 import React from 'react'
-class ComItem extends React.Component {
+export default class SubList extends React.Component{
+    constructor(){
+        super()
+    }
     render(){
         return <div className='comBox'>
             <h3>评论人：{this.props.user}</h3>
@@ -7,4 +10,3 @@ class ComItem extends React.Component {
         </div>
     }
 }
-export default ComItem
