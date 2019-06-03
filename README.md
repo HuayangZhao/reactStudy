@@ -2,7 +2,7 @@
 
 
 ## webpack基本配置
-1.新建文件夹（reactText)  
+1.新建文件夹
 2.运行npm init -y,快速初始化项目  
 3.在根目录新建src源代码目录和dist打包好的产品目录    
 4.在src中新建页面（index.html）和入口文件main.js  
@@ -11,36 +11,45 @@
 ### webpack3.6和webpack4的区别
 - webpack3中打包构建可以在package.json中配置dev用webpack命令行打包   
 
-		"dev": "webpack-dev-server --open --port 3000 --hot"
+   "dev": "webpack-dev-server --open --port 3000 --hot"
+
 - webpack4中package.json新增了mode打包配置  
 
-		module.exports = {
-			mode:'production',   //development 或者  production
-		}
+   ```
+   module.exports = {
+   		mode:'production',   //development 或者  production
+   	}
+   ```
 
 - webpack4中把webpack和打包构建分开了，webpack4构建项目需要使用webpack-cli包来提供  
 
 ## npm run dev
 - 配置完成后运行`npm run dev`在浏览器中打开项目
+
 - 把html放置到虚拟内存中用到`npm i html-webpack-plugin -D`
+
 - 在webpack.config.js中配置  
 
-		// 后面要指定文件路径 所以要用到path模块 
-		const path = require('path');
-		// 导入在内存中生成页面的插件
-		const HtmlWebPackPlugin = require('html-webpack-plugin')
-		// 创建一个插件实例对象
-		const htmlPlugin = new HtmlWebPackPlugin({
-		    template:path.join(__dirname,'./src/index.html'), //源文件
-		    filename:'index.html' //生成内存页面的名字
-		})
-		module.exports = {
-		    mode:'production', //development 或者  production
-		//第三方加载器
-		    plugins:[
-		        htmlPlugin
-		    ]
-		}
+   ```
+   // 后面要指定文件路径 所以要用到path模块 
+   	const path = require('path');
+   	// 导入在内存中生成页面的插件
+   	const HtmlWebPackPlugin = require('html-webpack-plugin')
+   	// 创建一个插件实例对象
+   	const htmlPlugin = new HtmlWebPackPlugin({
+   	    template:path.join(__dirname,'./src/index.html'), //源文件
+   	    filename:'index.html' //生成内存页面的名字
+   	})
+   	module.exports = {
+   	    mode:'production', //development 或者  production
+   	//第三方加载器
+   	    plugins:[
+   	        htmlPlugin
+   	    ]
+   	}
+   ```
+
+   
 
 ## 在项目中使用react
 1.运行`npm i react react-dom -S`安装包  
@@ -97,10 +106,14 @@
 
 - 配置  `.babelrc`
 
-		{
-		    "presets": ["env","stage-0","react"],
-		    "plugins": ["transform-runtime"],
-		}
+   ```
+   {
+       "presets": ["env","stage-0","react"],
+       "plugins": ["transform-runtime"],
+   }
+   ```
+
+   
 
 3.在JSX语法中需要用JS的地方就需要用{},在JXS中类名需要用className 不能用class   label中的for要用htmlFor
 
@@ -153,9 +166,8 @@
 
  - 新建`Holle.jsx`文件  
 
-    // 这里用到了JXS，要导入React
-    	import React from 'react'
-    	
+    	// 这里用到了JXS，要导入React
+    		import React from 'react'
     	export default function Holle(props){
     	return <div>这是HOLLE组件--{props.name}--{props.age}--{props.gender}</div>
     	}
@@ -164,155 +176,159 @@
 
  - 把jsx文件导入`index.js`中  
 
-    	import React from 'react'
-    	import ReactDOM from 'react-dom'
-    	
-    	// 导入jsx组件
-    	import Holle from './components/Holle.jsx'
-    	
-    	let dog = {
-    	    name:'大黄',
-    	    gender:'母的',
-    	    age:18
-    	}
-    	const mydiv = <div>
-    	    {/* <Holle name={dog.name} age={dog.age}></Holle> */}
-    		{/* {es6语法} */}
-    	    <Holle {...dog}></Holle>
-    	</div>
-    	ReactDOM.render(mydiv,document.getElementById('app'))
+     	import React from 'react'
+     		import ReactDOM from 'react-dom'
+     	// 导入jsx组件
+     	import Holle from './components/Holle.jsx'
+     	
+     	let dog = {
+     	    name:'大黄',
+     	    gender:'母的',
+     	    age:18
+     	}
+     	const mydiv = <div>
+     	    {/* <Holle name={dog.name} age={dog.age}></Holle> */}
+     		{/* {es6语法} */}
+     	    <Holle {...dog}></Holle>
+     	</div>
+     	ReactDOM.render(mydiv,document.getElementById('app'))
 
 3.使用`class`类创建组件  
 
- - 先了解class使用方式
+ - 先了解class使用方式	
 
-    	// 以前
-    		function Person(name,age){
-    		    this.name = name
-    		    this.age = age
-    		}
-    		Person.prototype.say = function(){
-    		    console.log('这是实例方法，new出来的实例也能调用')
-    		}
-    		Person.show=function(){
-    		    console.log('这是静态方法，Person.show（）')
-    		}
-    		Person.info = 'aaaa' //直接挂在到了构造函数身上 这是静态属性  new出来的对象无法使用
-    	let a1 = new Person("lisi",20)
-    	console.log(a1.info)  //undefined 访问不到
-    	//通过构造函数直接访问
-    	console.log(Person.info)
-    	console.log(a1.name) //能通过new出来的实例访问到的属性 这是实例属性
-    	
-    	//----------------------------分割线----------------------------------------------------
-    	
-    	// class类
-    	class Chinese {
-    	    constructor(name,age){
-    	        this.name = name
-    	        this.age = age
-    	    }
-    	    //在class内部 通过 static关键字 来标识属性属于静态
-    	    static info = 'aaa'
-    	    show(){
-    	        console.log('这是实例方法，直接在class中写就行')
-    	    }
-    	
-    	    static say(){
-    	        console.log('这是静态方法，要用static标识')
-    	    }
-    	}
-    	
-    	let a2 = new Chinese("jack",20)
-    	
-    	console.log(a2.info)  //undefined 访问不到
-    	
-    	//info是Chinese的静态属性
-    	console.log(Chinese.info)
-    	
-    	console.log(a2.age)
+     	// 以前
+     			function Person(name,age){
+     	
+     			    this.name = name
+     	
+     			    this.age = age
+     			}
+     			Person.prototype.say = function(){
+     			    console.log('这是实例方法，new出来的实例也能调用')
+     			}
+     			Person.show=function(){
+     			    console.log('这是静态方法，Person.show（）')
+     			}
+     			Person.info = 'aaaa' //直接挂在到了构造函数身上 这是静态属性  new出来的对象无法使用
+     		let a1 = new Person("lisi",20)
+     		console.log(a1.info)  //undefined 访问不到
+     		//通过构造函数直接访问
+     		console.log(Person.info)
+     		console.log(a1.name) //能通过new出来的实例访问到的属性 这是实例属性
+     	
+     	//----------------------------分割线----------------------------------------------------
+     	
+     	// class类
+     	class Chinese {
+     	    constructor(name,age){
+     	        this.name = name
+     	        this.age = age
+     	    }
+     	    //在class内部 通过 static关键字 来标识属性属于静态
+     	    static info = 'aaa'
+     	    show(){
+     	        console.log('这是实例方法，直接在class中写就行')
+     	    }
+     	
+     	    static say(){
+     	        console.log('这是静态方法，要用static标识')
+     	    }
+     	}
+     	
+     	let a2 = new Chinese("jack",20)
+     	
+     	console.log(a2.info)  //undefined 访问不到
+     	
+     	//info是Chinese的静态属性
+     	console.log(Chinese.info)
+     	
+     	console.log(a2.age)
 
 - class的继承  
 
-   	// 创建父类
-   		class Preson {
-   		    constructor(name,age){
-   		        this.name = name
-   		        this.age = age
-   		    }
-   		    say(){
-   		        console.log("HOLLE")
-   		    }
-   		}
-   	// 继承父类用extends关键字
-   	class Chinese extends Preson{
-   	    constructor(name,age,IDNumber){ 
-   	        //子类中的构造器中必须优先调用 super（）方法
-   	        //super是一个函数 相当于父类的构造器 子类中的super相当于是父类constructor的一个引用
-   	        //如果super调用没有传递参数 调用后实例上的name,age都会为undefined 因为super相当于调用父类的构造器，父类构造器没收到的参数
-   	        // 身份证号是中国人独有的 所以身份证号不能放在父类上
-   	        // this.IDNumber = IDNumber   super（）方法要优先调用 this不能放在super（）方法之前
-   	        super(name,age,IDNumber)
-   	        this.IDNumber = IDNumber
-   	    }
-   	}
-   	let a2 = new Chinese("jack",20,'12513135*********3212')
-   	console.log(a2)
-   	a2.say()
-   	
-   	class American extends Preson{
-   	   //不写构造器时 new时会默认吧参数传递给父类
-   	}
-   	let a3 = new American("zhangsan",20)
-   	console.log(a3)
-   	a3.say()
+    	// 创建父类
+    			class Preson {
+    			    constructor(name,age){
+    			        this.name = name
+    			        this.age = age
+    			    }
+    			    say(){
+    			        console.log("HOLLE")
+    			    }
+    			}
+    		// 继承父类用extends关键字
+    		class Chinese extends Preson{
+    		    constructor(name,age,IDNumber){ 
+    		        //子类中的构造器中必须优先调用 super（）方法
+    		        //super是一个函数 相当于父类的构造器 子类中的super相当于是父类constructor的一个引用
+    		        //如果super调用没有传递参数 调用后实例上的name,age都会为undefined 因为super相当于调用父类的构造器，父类构造器没收到的参数
+    		        // 身份证号是中国人独有的 所以身份证号不能放在父类上
+    		        // this.IDNumber = IDNumber   super（）方法要优先调用 this不能放在super（）方法之前
+    		        super(name,age,IDNumber)
+    		        this.IDNumber = IDNumber
+    		    }
+    		}
+    		let a2 = new Chinese("jack",20,'12513135*****3212')
+    		console.log(a2)
+    		a2.say()
+    	class American extends Preson{
+    	   //不写构造器时 new时会默认吧参数传递给父类
+    	}
+    	let a3 = new American("zhangsan",20)
+    	console.log(a3)
+    	a3.say()
 
 - 使用class创建组件
 
+    ```
+    import React from 'react'
+    	// import React, {Component} from 'react'   
+    	//按需导入component 创建组件时候就可以直接写 class Moven extends Component {}
+    	import ReactDOM from 'react-dom'
+    	
+    	// 用class来创建组件 
+    	class Moven extends React.Component { 
+    	    // 1.要用react组件 所有的类都属于React.Component这个父类
+    	    // 2.组件内部必须用render函数 返回虚拟DOM
+    	    // 3.render函数中必须要有return  
+    	    render(){
+    	        return <div>这是class创建的组件</div>
+    	    }
+    	}
+    	const mydiv = <div>
+    	    123
+    	    <Moven></Moven>
+    	</div>
+    	ReactDOM.render(mydiv,document.getElementById('app'))
+    ```
 
-		import React from 'react'
-		// import React, {Component} from 'react'   
-		//按需导入component 创建组件时候就可以直接写 class Moven extends Component {}
-		import ReactDOM from 'react-dom'
-		
-		// 用class来创建组件 
-		class Moven extends React.Component { 
-		    // 1.要用react组件 所有的类都属于React.Component这个父类
-		    // 2.组件内部必须用render函数 返回虚拟DOM
-		    // 3.render函数中必须要有return  
-		    render(){
-		        return <div>这是class创建的组件</div>
-		    }
-		}
-		const mydiv = <div>
-		    123
-		    <Moven></Moven>
-		</div>
-		ReactDOM.render(mydiv,document.getElementById('app'))
+    
+
 ## class组件相关操作
 
 - props组件传参（此参数是只读的）
 
-```
-// 用class来创建组件 
-class Moven extends React.Component {  
-    //接受组件参数直接this.props.name的方式
-    render(){
-        return <div>
-            这是class创建的组件--{this.props.name}
-            </div>
-    }
-}
-let user={
-    name:'zs',
-    age:18
-}
-const mydiv = <div>
-    123
-    <Moven {...user}></Moven>
-</div>
-ReactDOM.render(mydiv,document.getElementById('app'))
-```
+  ```
+  // 用class来创建组件 
+  class Moven extends React.Component {  
+      //接受组件参数直接this.props.name的方式
+      render(){
+          return <div>
+              这是class创建的组件--{this.props.name}
+              </div>
+      }
+  }
+  let user={
+      name:'zs',
+      age:18
+  }
+  const mydiv = <div>
+      123
+      <Moven {...user}></Moven>
+  </div>
+  ReactDOM.render(mydiv,document.getElementById('app'))
+  ```
 
 - class创建组件和function创建函数的对比
 
@@ -508,8 +524,7 @@ ReactDOM.render(mydiv,document.getElementById('app'))
             	//exclude为排除项  不能忘记加
                 {test:/\.js|jsx$/,use:'babel-loader',exclude:/node_modules/}, 
                 { 
-                    test: /\.css$/, use: ['style-loader', 
-                    'css-loader?modules']
+                    test: /\.css$/, use: ['style-loader', 'css-loader?modules']
                 }  
             ],
      }
@@ -744,7 +759,178 @@ export default class Click extends React.Component {
     })
     }
 }
+```
 
+## 使用 PropTypes 进行类型检查
+
+`npm i prop-types`
+
+如页面上有个数值类型的参数，这是后属性校验是很有必要的
+
+```
+import React from 'react'
+import Types from 'prop-types'
+export default class AddNumber extends React.Component{
+    constructor(){
+        super()
+        this.state ={}
+    }
+    //这里的propTypes属性名不能变
+    static propTypes = {
+        number:Types.number.isRequired //传递的number参数 要求是数值类型并且必填
+    }
+    render(){
+        return <div>
+            <button>点击按钮加数字</button>
+            <h3>当前数字为：{this.props.number}</h3>
+        </div>
+    }
+}
+----------------------------------
+import Add from '@/components/addNum'
+const mydiv = <div>
+    <Add number = {100}></Add>
+    <hr/>
+    <Add  number = {"字符串"}></Add>
+</div>
+```
+
+这里只能显示是数字，结果传了一个字符串，设置propTypes属性后 ，页面会报错，
+
+具体可查看文档： <https://zh-hans.reactjs.org/docs/typechecking-with-proptypes.html> 
+
+## 给属性设置默认值
+
+`defaultProps` 可以为组件添加默认 props。这一般用于 props 未赋值，但又不能为 null 的情况。 
+
+```
+import React from 'react'
+import Types from 'prop-types'
+export default class AddNumber extends React.Component{
+    //这里的propTypes属性名不能变
+    static propTypes = {
+        number:Types.number.isRequired
+    }
+    //默认number为0 
+    static defaultProps = {
+        number:0  
+    }
+    constructor(){
+        super()
+        this.state ={}
+    }
+    render(){
+        return <div>
+            <button onClick={()=>{this.props.number+1}}>点击按钮加数字</button>
+            <h3>当前数字为：{this.props.number}</h3>
+        </div>
+    }
+}
+----------------------------------
+import Add from '@/components/addNum'
+const mydiv = <div>
+    <Add number = {100}></Add>
+    <hr/>
+    <Add></Add> //这里没有传参 但最终会渲染出一个0在这里
+</div>
+```
+
+## react的生命周期
+
+#### 初始化阶段
+
+```
+ import React from 'react'
+    import Types from 'prop-types'
+    export default class AddNumber extends React.Component{
+        //这里的propTypes属性名不能变
+        static propTypes = {
+            number:Types.number.isRequired
+        }
+        // 1.defaultProps 设置组件的默认属性值
+        static defaultProps = {
+            number:0
+        }
+        // 2.constructor 构造器 组件的初始状态 也就是this.state中的数据
+        constructor(){
+            super()
+            this.state ={
+                msg:'hahaha'
+            }
+        }
+        // 3.组件初始化完毕 并且即将被渲染到页面之前触发
+        componentWillMount(){
+             console.log(this.state.msg); //能打印出来数据：hahaha
+            console.log(document.getElementById('xxx')); // null 页面没渲染出来 所以获取不到
+        }
+        // 4.组件渲染 正在往页面上渲染
+        render(){
+            return <div>
+                <button onClick={()=>{this.props.number+1}}>点击按钮加数字</button>
+                <h3 id={"xxx"}>当前数字为：{this.props.number}</h3>
+            </div>
+        }
+        // 5.组件已经被渲染到页面了：此时页面中有了真正的DOM的元素，可以进行DOM相关的操作
+        componentDidMount(){
+            console.log(document.getElementById('xxx')) //这时候可以获取到 因为页面已经渲染完毕了
+        }
+    }
+```
+
+#### 运行阶段
+
+现在点击按钮 让数值加1
+
+```
+	import React from 'react'
+    import Types from 'prop-types'
+    export default class AddNumber extends React.Component{
+        // 这里的propTypes属性名不能变
+        static propTypes = {
+            number:Types.number.isRequired
+        }
+        // defaultProps 设置组件的默认属性值
+        static defaultProps = {
+            number:0
+        }
+        // constructor 构造器 组件的初始状态 也就是this.state中的数据
+        constructor(props){
+            super()
+            this.state ={
+                msg:'hahaha',
+                // 这里等于props值
+                // 注意：在 constructor，如果想访问 props 上的属性，不能直接使用 this.props.***
+                // 在构造函数中，访问props, 只能在 constructor(props) 来进行接收
+                num:props.number,
+            }
+        }
+        // 组件初始化完毕 并且即将被渲染到页面之前触发
+        componentWillMount(){
+             console.log(this.state.msg); //能打印出来数据：hahaha
+            console.log(document.getElementById('xxx')); // null 页面没渲染出来 所以获取不到
+        }
+        // 组件渲染 正在往页面上渲染
+        render(){
+            return <div>
+                <button onClick={()=>{this.add()}}>点击按钮加数字</button>
+                <h3 id={"xxx"}>当前数字为：{this.state.num}</h3>
+            </div>
+        }
+        // 组件已经被渲染到页面了：此时页面中有了真正的DOM的元素，可以进行DOM相关的操作
+        componentDidMount(){
+            console.log(document.getElementById('xxx')) //这时候可以获取到 因为页面已经渲染完毕了
+        }
+        -----------------------------------
+   //props是只读属性 是不能被改变的
+       add=()=>{
+            this.props.number += 1
+        }
+   ------------------------------------
+   //能被改变的也就this.state中的数据了，每次点击可以把prop赋值给state 然后把state同步到界面
+        add=()=>{
+            this.setState({num:this.state.num + 1})
+        }
+    }
 
 ```
 

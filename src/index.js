@@ -2,8 +2,8 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 // import Click from '@/components/点击事件'
-import List from '@/components/list'
+import Add from '@/components/addNum'
 const mydiv = <div>
-    <List></List>
+    <Add number={100}></Add>
 </div>
 ReactDOM.render(mydiv,document.getElementById('app'))
