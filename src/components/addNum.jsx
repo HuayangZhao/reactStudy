@@ -22,8 +22,8 @@
         }
         // 组件初始化完毕 并且即将被渲染到页面之前触发
         componentWillMount(){
-             console.log(this.state.msg); //能打印出来数据：hahaha
-            console.log(document.getElementById('xxx')); // null 页面没渲染出来 所以获取不到
+           console.log(this.state.msg); //能打印出来数据：hahaha
+           console.log(document.getElementById('xxx')); // null 页面没渲染出来 所以获取不到
         }
         // 组件渲染 正在往页面上渲染
         render(){
@@ -36,7 +36,16 @@
         componentDidMount(){
             console.log(document.getElementById('xxx')) //这时候可以获取到 因为页面已经渲染完毕了
         }
+        // 组件的 porps 被改变，会重新触发 componentWillRevceiveProps
+        componentWillReceiveProps(nextProps){
+            console.log(this.state.num,1111); //此时只是没有更新的 因为此时Props参数还没有跟新
+            console.log('nextProps 中的number属性值是：' + nextProps.number)
+            this.setState({ //在这个生命周期中把新的props赋值上去
+                num: nextProps.number
+            })
+        }
         add=()=>{
+            // this.props.number += 1 props是只读属性 是不能被改变的
             this.setState({num:this.state.num + 1})
         }
     }

@@ -934,3 +934,106 @@ const mydiv = <div>
 
 ```
 
+#### 属性改变
+
+嵌套父子组件  点击一个按钮使父与子组件的值都加1
+
+```
+父组件
+import React from 'react'
+import ReactDOM from 'react-dom'
+// import Click from '@/components/点击事件'
+import Add from '@/components/addNum'
+class Parend extends React.Component{
+    constructor(){
+        super()
+        this.state = {
+            shuzi:101
+        }
+    }
+    render(){
+        return <div>
+            <button onClick={()=>{this.addAll()}}>点击按钮使两个值都+1</button>
+            <h4>这个数字要和下面的同步：{this.state.shuzi}</h4>
+            <Add number={this.state.shuzi}></Add>
+        </div>
+    }
+    addAll=()=>{
+       this.setState({shuzi:this.state.shuzi+1})
+    }
+}
+const mydiv = <div>
+    <Parend></Parend>
+</div>
+ReactDOM.render(mydiv,document.getElementById('app'))
+```
+
+```
+子组件
+import React from 'react'
+    import Types from 'prop-types'
+    export default class AddNumber extends React.Component{
+        // 这里的propTypes属性名不能变
+        static propTypes = {
+            number:Types.number.isRequired
+        }
+        // defaultProps 设置组件的默认属性值
+        static defaultProps = {
+            number:0
+        }
+        // constructor 构造器 组件的初始状态 也就是this.state中的数据
+        constructor(props){
+            super()
+            this.state ={
+                msg:'hahaha',
+                // 这里等于props值
+                // 注意：在 constructor，如果想访问 props 上的属性，不能直接使用 this.props.***
+                // 在构造函数中，访问props, 只能在 constructor(props) 来进行接收
+                num:props.number,
+            }
+        }
+        // 组件初始化完毕 并且即将被渲染到页面之前触发
+        componentWillMount(){
+           console.log(this.state.msg); //能打印出来数据：hahaha
+           console.log(document.getElementById('xxx')); // null 页面没渲染出来 所以获取不到
+        }
+        // 组件渲染 正在往页面上渲染
+        render(){
+            return <div>
+                <button onClick={()=>{this.add()}}>点击按钮加数字</button>
+                <h3 id={"xxx"}>当前数字为：{this.state.num}</h3>
+            </div>
+        }
+        // 组件已经被渲染到页面了：此时页面中有了真正的DOM的元素，可以进行DOM相关的操作
+        componentDidMount(){
+            console.log(document.getElementById('xxx')) //这时候可以获取到 因为页面已经渲染完毕了
+        }
+        // 组件的 porps 被改变，会重新触发 componentWillRevceiveProps
+        componentWillReceiveProps(nextProps){
+            console.log(this.state.num,1111); //此时只是没有更新的 因为此时Props参数还没有跟新
+            console.log('nextProps 中的number属性值是：' + nextProps.number)
+            this.setState({ //在这个生命周期中把新的props赋值上去
+                num: nextProps.number
+            })
+        }
+        add=()=>{
+            // this.props.number += 1 props是只读属性 是不能被改变的
+            this.setState({num:this.state.num + 1})
+        }
+    }
+```
+
+此处点击父组件按钮  如果没调用componentWillReceiveProps周期函数 为什么父组件值个跟新了 子组件没跟新？
+
+```
+当点击父组件按钮  改变state状态值 状态改变就会触发生命周期去更新组件 会重新render  此时状态改变了  但是子组件还是原来的子组件 根据react中的diff算法 子组件的生命周期函数是不会重新render的  所以子组件的值依旧不会改变 需要调用`componentWillReceiveProps`来改变子组件的值
+```
+
+####  shouldComponentUpdate ，componentWillUpdate ，componentDidUpdate 
+
+```
+这三个生命周期包括render中不可改变state中的状态值，因为状态值改变就会触发这几个生命周期函数 在这几个函数中再改变状态  这样就造成了死循环 而其他生命周期函数中不存在这种情况
+```
+
+
+

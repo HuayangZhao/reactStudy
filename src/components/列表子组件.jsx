@@ -1,6 +1,5 @@
 import React from 'react'
 import ComItem from './评论组件'
-import ComStyle from '../style/comList.less'
 import 'bootstrap/dist/css/bootstrap.css'
 class ComList extends React.Component {
     constructor(){

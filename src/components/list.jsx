@@ -1,5 +1,6 @@
 import React from 'react'
 import Sublist from './subList'
+import PostCom from './postCom'
 import '@/style/comList.less'
 export default class List extends React.Component{
     constructor() {
@@ -17,6 +18,7 @@ export default class List extends React.Component{
     render() {
         return <div>
             <h1 className='title'>这是评论列表组件</h1>
+            <PostCom></PostCom>
             {this.state.CommentList.map(item => <Sublist {...item} key={item.id}></Sublist>)}
         </div>
     }
